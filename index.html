@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LYRA – Music &amp; Video Player for Android</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f8fb;--s:#fff;--l:#dde4ee;--t:#0d1522;--m:#5b6779;--a:#0a7cc2;--ai:#fff;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0e15;--s:#111823;--l:#1e2938;--t:#e9eef6;--m:#8d99ad;--a:#4cc2ff;--ai:#04121d}}
+:root[data-theme="dark"]{--bg:#0a0e15;--s:#111823;--l:#1e2938;--t:#e9eef6;--m:#8d99ad;--a:#4cc2ff;--ai:#04121d}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.65;overflow-x:hidden}
+a{color:inherit}:focus-visible{outline:2px solid var(--a);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}.i.f{fill:currentColor;stroke:none}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--l)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.18em;font-size:16px}
+.btn{display:inline-flex;align-items:center;gap:10px;font:700 16px/1 "Manrope",sans-serif;color:var(--ai);background:var(--a);padding:16px 24px;border-radius:10px;text-decoration:none;border:0;cursor:pointer}
+.btn.sm{padding:10px 16px;font-size:14px}.btn:hover{filter:brightness(1.08)}.btn:active{transform:translateY(1px)}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:64px 0 72px}
+.tag{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
+h1{font-size:clamp(34px,5.2vw,54px);line-height:1.1;margin:0 0 18px;font-weight:800;letter-spacing:-.025em}
+.lead{color:var(--m);font-size:18px;max-width:30em;margin:0 0 28px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:18px;color:var(--m);font-size:14px}
+.facts span+span::before{content:"";display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--l);margin-right:18px;vertical-align:middle}
+#note{display:none;margin-top:14px;padding:10px 14px;border:1px solid var(--l);background:var(--s);border-radius:8px;font-size:14px}
+.stage{display:flex;justify-content:center;gap:22px}.stage .phone:nth-child(2){margin-top:44px}
+/* phones: always dark, flat, subtle */
+.phone{--pb:#0b0f17;--pc:#131b28;--pt:#e9eef6;--pd:#8693a8;--pa:#4cc2ff;
+  width:226px;height:462px;border-radius:26px;background:var(--pb);color:var(--pt);border:1px solid #243148;box-shadow:0 24px 50px rgba(8,14,24,.35);
+  padding:16px 14px;font-size:11px;line-height:1.35;overflow:hidden;position:relative;text-align:left}
+.ph{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 14px}.ph b{font-size:14px;letter-spacing:.16em}.ph small{color:var(--pd)}
+.stat{background:#122238;border:1px solid #1d3452;border-radius:12px;padding:12px 14px;margin-bottom:12px;display:flex;gap:4px 14px;align-items:baseline;flex-wrap:wrap}
+.stat b{font-size:20px}.stat span{color:var(--pd)}
+.chips{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.chips i{font-style:normal;background:var(--pc);border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:5px}
+.sec{font-weight:700;margin:10px 0 6px;font-size:11px;color:var(--pd);letter-spacing:.06em;text-transform:uppercase}
+.tiles{display:flex;gap:8px}.tile{flex:1;aspect-ratio:1;border-radius:8px}
+.c1{background:linear-gradient(140deg,#2c6e99,#17334d)}.c2{background:linear-gradient(140deg,#4a6b78,#1d2b35)}.c3{background:linear-gradient(140deg,#2f7d78,#15302f)}.c4{background:linear-gradient(140deg,#6b5b4a,#2a2119)}
+.row{display:flex;gap:10px;align-items:center;padding:7px 6px;border-radius:8px}.row.on{background:var(--pc)}
+.art{width:34px;height:34px;border-radius:7px;flex:0 0 auto}
+.row b{font-weight:600;font-size:12px;display:block}.row small{color:var(--pd)}.row em{margin-left:auto;font-style:normal;color:var(--pd)}
+.search{background:var(--pc);border-radius:8px;padding:9px 11px;color:var(--pd);margin-bottom:8px;display:flex;gap:8px;align-items:center}
+.mini{position:absolute;left:10px;right:10px;bottom:12px;background:#17212f;border:1px solid #243148;border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:9px}
+.eq{display:inline-flex;align-items:flex-end;gap:2px;height:13px;margin-left:auto}.eq i{width:2px;height:100%;background:var(--pa);transform-origin:bottom;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}
+@keyframes eq{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.npa{width:150px;height:150px;border-radius:14px;margin:22px auto 18px;background:linear-gradient(140deg,#2c6e99,#17334d 70%);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.nt{text-align:center;font-weight:700;font-size:14px}.na{text-align:center;color:var(--pd)}
+.bar{height:3px;border-radius:3px;background:#26334a;margin:18px 0 6px}.bar i{display:block;height:100%;width:40%;background:var(--pa);border-radius:3px}
+.tm{display:flex;justify-content:space-between;color:var(--pd)}
+.ctl{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:14px;font-size:18px;color:var(--pd)}
+.ctl .pl{width:46px;height:46px;border-radius:50%;background:var(--pt);color:var(--pb);display:grid;place-items:center;font-size:18px}
+.tools{display:flex;justify-content:center;gap:6px;margin-top:16px}.tools i{font-style:normal;background:var(--pc);padding:6px 11px;border-radius:8px}
+.vid .scene{position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,#2c6e99,#101c2b 45%,#05080d 80%)}
+.vid .top,.vid .bot{position:absolute;left:0;right:0;padding:16px 14px;display:flex;justify-content:space-between;align-items:center}
+.vid .top{top:0;background:linear-gradient(#000a,transparent)}.vid .bot{bottom:0;flex-direction:column;align-items:stretch;background:linear-gradient(transparent,#000c)}
+.vid .mid{position:absolute;top:44%;left:0;right:0;display:flex;justify-content:center;gap:26px;align-items:center;font-size:20px}
+/* sections */
+section{padding:64px 0;border-top:1px solid var(--l)}
+h2{font-size:clamp(24px,3.4vw,34px);line-height:1.2;margin:0 0 10px;font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--m);margin:0 0 36px;max-width:36em}
+.shots{display:flex;gap:24px;overflow-x:auto;padding:4px 4px 24px;scroll-snap-type:x mandatory}
+.shot{flex:0 0 auto;scroll-snap-align:start;font-weight:600;font-size:14px;color:var(--m)}.shot .phone{margin-bottom:14px}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:0 36px}
+.feat div{padding:22px 0;border-top:1px solid var(--l)}
+.ic{width:24px;height:24px;color:var(--a);margin-bottom:12px}.ic .i{width:24px;height:24px;stroke-width:1.7}
+.feat h3{margin:0 0 4px;font-size:16px}.feat p{margin:0;color:var(--m);font-size:15px}
+.extra{background:var(--s);border:1px solid var(--l);border-radius:14px;padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:24px 40px;align-items:center}
+.extra h2{margin-bottom:8px}.extra p{color:var(--m);margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:8px}.tags span{border:1px solid var(--l);border-radius:8px;padding:8px 14px;font-weight:600;font-size:14px}
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+ol.steps li{counter-increment:s;color:var(--m);font-size:15px}
+ol.steps li::before{content:"0" counter(s);display:block;font-weight:800;font-size:13px;letter-spacing:.1em;color:var(--a);margin-bottom:8px}
+ol.steps b{color:var(--t)}
+details{border-top:1px solid var(--l);padding:16px 0}details:last-of-type{border-bottom:1px solid var(--l)}summary{cursor:pointer;font-weight:600}
+details p{color:var(--m);margin:8px 0 0;max-width:46em}
+.cta{background:var(--s);border:1px solid var(--l);border-radius:14px;padding:48px 24px;text-align:center}.cta h2{margin-bottom:20px}
+footer{padding:30px 0 46px;color:var(--m);font-size:13px;text-align:center}
+@media (max-width:860px){.hero{grid-template-columns:1fr;padding:40px 0}.stage .phone:nth-child(2){display:none}.feat{grid-template-columns:1fr 1fr}.extra{grid-template-columns:1fr}ol.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.feat,ol.steps{grid-template-columns:1fr}.btn{width:100%;justify-content:center}nav .btn{width:auto}}
+@media (prefers-reduced-motion:reduce){.eq i{animation:none;transform:scaleY(.6)}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+<symbol id="pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></symbol>
+<symbol id="next" viewBox="0 0 24 24"><path d="M6 5l9 7-9 7zM17 5h2v14h-2z"/></symbol>
+<symbol id="prev" viewBox="0 0 24 24"><path d="M18 5l-9 7 9 7zM5 5h2v14H5z"/></symbol>
+<symbol id="shuf" viewBox="0 0 24 24"><path d="M3 7h3c5 0 5 10 10 10h5M3 17h3c1.5 0 2.6-.8 3.5-2M13 8c1-.8 2-1 3-1h5M18 4l3 3-3 3M18 14l3 3-3 3"/></symbol>
+<symbol id="rep" viewBox="0 0 24 24"><path d="M4 11V9a3 3 0 013-3h11l-3-3M20 13v2a3 3 0 01-3 3H6l3 3"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="rew" viewBox="0 0 24 24"><path d="M11 6l-6 6 6 6M19 6l-6 6 6 6"/></symbol>
+<symbol id="fwd" viewBox="0 0 24 24"><path d="M13 6l6 6-6 6M5 6l6 6-6 6"/></symbol>
+<symbol id="find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+<symbol id="bell" viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/></symbol>
+<symbol id="folder" viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></symbol>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 6-8 11-8 11z"/></symbol>
+<symbol id="film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></symbol>
+<symbol id="moon" viewBox="0 0 24 24"><path d="M20 14A8 8 0 019.5 3.5 8 8 0 1020 14z"/></symbol>
+<symbol id="list" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+</defs></svg>
+<div class="wrap">
+  <nav>
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M16 12c-6 8-4 22 8 36M48 12c6 8 4 22-8 36" stroke="var(--a)" stroke-width="5" stroke-linecap="round"/><path d="M27 14v22M32 14v22M37 14v22" stroke="var(--a)" stroke-width="3" stroke-linecap="round" opacity=".75"/><rect x="20" y="48" width="24" height="5" rx="2.5" fill="var(--a)"/></svg>
+      LYRA
+    </div>
+    <a class="btn sm dl" href="#">Download</a>
+  </nav>
+
+  <main>
+  <div class="hero">
+    <div>
+      <span class="tag">Music &amp; video player for Android</span>
+      <h1>All your music and videos in one fast player.</h1>
+      <p class="lead">LYRA finds every song and video on your phone and plays them in a clean, dark interface. Playback continues with the screen off, with controls in your notification and on the lock screen.</p>
+      <a class="btn dl" href="#">
+        <svg class="i" style="width:20px;height:20px;stroke-width:2.6" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg>
+        Download APK
+      </a>
+      <div id="note" role="status">The download link isn’t live yet. Please check back soon.</div>
+      <div class="facts"><span>Free</span><span>Android 7.0+</span><span>v1.0.0 Beta</span><span>No account</span></div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="phone">
+        <div class="npa"></div>
+        <div class="nt">Midnight Drive</div><div class="na">Nila Rahman</div>
+        <div class="bar"><i></i></div><div class="tm"><span>1:24</span><span>-2:19</span></div>
+        <div class="ctl"><svg class="i"><use href="#shuf"/></svg><svg class="i f"><use href="#prev"/></svg><span class="pl"><svg class="i f"><use href="#pause"/></svg></span><svg class="i f"><use href="#next"/></svg><svg class="i"><use href="#rep"/></svg></div>
+        <div class="tools"><i>Lyrics</i><i>1x</i><i>Sleep</i></div>
+      </div>
+      <div class="phone">
+        <div class="ph"><b>Songs</b><small>128 tracks</small></div>
+        <div class="search"><svg class="i"><use href="#find"/></svg>Search songs</div>
+        <div class="row on"><div class="art c1"></div><div><b>Midnight Drive</b><small>Nila Rahman</small></div><span class="eq"><i></i><i></i><i></i></span></div>
+        <div class="row"><div class="art c2"></div><div><b>Slow Rivers</b><small>Rafi Ahmed</small></div><em>4:05</em></div>
+        <div class="row"><div class="art c3"></div><div><b>Golden Hour</b><small>Tania</small></div><em>3:12</em></div>
+        <div class="row"><div class="art c4"></div><div><b>Late Rain</b><small>Unknown Artist</small></div><em>2:58</em></div>
+        <div class="row"><div class="art c1"></div><div><b>Open Window</b><small>Sabbir</small></div><em>3:30</em></div>
+        <div class="row"><div class="art c2"></div><div><b>Paper Moon</b><small>Nila Rahman</small></div><em>3:51</em></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="screens">
+    <h2>Designed for everyday listening</h2>
+    <p class="sub">A dark, uncluttered interface that works well with one hand.</p>
+    <div class="shots" tabindex="0" aria-label="App screens">
+      <div class="shot"><div class="phone" role="img" aria-label="Home screen">
+        <div class="ph"><b>LYRA</b><small>Good evening</small></div>
+        <div class="stat"><b>128</b><span>Songs</span><b>24</b><span>Videos</span></div>
+        <div class="chips"><i><svg class="i f"><use href="#play"/></svg>Play all</i><i><svg class="i"><use href="#heart"/></svg>Favorites</i><i><svg class="i"><use href="#list"/></svg>Playlists</i></div>
+        <div class="sec">Continue listening</div><div class="tiles"><div class="tile c1"></div><div class="tile c2"></div><div class="tile c3"></div></div>
+        <div class="sec">Recently added</div><div class="tiles"><div class="tile c4"></div><div class="tile c1"></div><div class="tile c2"></div></div>
+        <div class="mini"><div class="art c1" style="width:26px;height:26px"></div><b>Midnight Drive</b><span class="eq"><i></i><i></i><i></i></span></div>
+      </div>Home</div>
+      <div class="shot"><div class="phone" role="img" aria-label="Songs list">
+        <div class="ph"><b>Songs</b><small>128 tracks</small></div>
+        <div class="search"><svg class="i"><use href="#find"/></svg>Search songs</div>
+        <div class="row on"><div class="art c1"></div><div><b>Midnight Drive</b><small>Nila Rahman</small></div><span class="eq"><i></i><i></i><i></i></span></div>
+        <div class="row"><div class="art c2"></div><div><b>Slow Rivers</b><small>Rafi Ahmed</small></div><em>4:05</em></div>
+        <div class="row"><div class="art c3"></div><div><b>Golden Hour</b><small>Tania</small></div><em>3:12</em></div>
+        <div class="row"><div class="art c4"></div><div><b>Late Rain</b><small>Unknown Artist</small></div><em>2:58</em></div>
+        <div class="row"><div class="art c1"></div><div><b>Open Window</b><small>Sabbir</small></div><em>3:30</em></div>
+        <div class="row"><div class="art c2"></div><div><b>Paper Moon</b><small>Nila Rahman</small></div><em>3:51</em></div>
+      </div>Songs</div>
+      <div class="shot"><div class="phone" role="img" aria-label="Now playing">
+        <div class="npa"></div><div class="nt">Slow Rivers</div><div class="na">Rafi Ahmed</div>
+        <div class="bar"><i style="width:62%"></i></div><div class="tm"><span>2:31</span><span>-1:34</span></div>
+        <div class="ctl"><svg class="i"><use href="#shuf"/></svg><svg class="i f"><use href="#prev"/></svg><span class="pl"><svg class="i f"><use href="#play"/></svg></span><svg class="i f"><use href="#next"/></svg><svg class="i"><use href="#rep"/></svg></div>
+        <div class="tools"><i>Lyrics</i><i>1x</i><i>Sleep</i></div>
+      </div>Now playing</div>
+      <div class="shot"><div class="phone vid" role="img" aria-label="Video player">
+        <div class="scene"></div>
+        <div class="top"><svg class="i" style="font-size:18px"><use href="#back"/></svg><span>0.5x &nbsp; 1x &nbsp; 2x</span></div>
+        <div class="mid"><svg class="i"><use href="#rew"/></svg><span class="pl" style="width:46px;height:46px;border-radius:50%;background:#e9eef6;color:#0b0f17;display:grid;place-items:center"><svg class="i f"><use href="#pause"/></svg></span><svg class="i"><use href="#fwd"/></svg></div>
+        <div class="bot"><div class="bar" style="margin:0 0 6px"><i style="width:48%"></i></div><div class="tm"><span>12:08</span><span>25:40</span></div></div>
+      </div>Video player</div>
+      <div class="shot"><div class="phone" role="img" aria-label="Folders">
+        <div class="ph"><b>Folders</b><small>6 folders</small></div>
+        <div class="row on"><div class="art c3"></div><div><b>Music</b><small>84 songs</small></div></div>
+        <div class="row"><div class="art c2"></div><div><b>Downloads</b><small>22 songs · 9 videos</small></div></div>
+        <div class="row"><div class="art c4"></div><div><b>WhatsApp Audio</b><small>14 files</small></div></div>
+        <div class="row"><div class="art c1"></div><div><b>Movies</b><small>15 videos</small></div></div>
+        <div class="row"><div class="art c2"></div><div><b>Road trip</b><small>Playlist · 24 songs</small></div></div>
+      </div>Folders &amp; playlists</div>
+    </div>
+  </section>
+
+  <section id="features">
+    <h2>What’s included</h2>
+    <p class="sub">Built for the music and videos you already have.</p>
+    <div class="feat">
+      <div><div class="ic"><svg class="i"><use href="#find"/></svg></div><h3>Automatic library</h3><p>Allow access once and your songs and videos appear. No manual importing.</p></div>
+      <div><div class="ic"><svg class="i"><use href="#bell"/></svg></div><h3>Background playback</h3><p>Keep listening with the screen off. Pause, skip and go back from the notification or lock screen.</p></div>
+      <div><div class="ic"><svg class="i"><use href="#folder"/></svg></div><h3>Browse by folder</h3><p>Open the folder where your files live and play straight from it.</p></div>
+      <div><div class="ic"><svg class="i"><use href="#heart"/></svg></div><h3>Favorites and playlists</h3><p>Save the tracks you love and build your own playlists.</p></div>
+      <div><div class="ic"><svg class="i"><use href="#film"/></svg></div><h3>Resume videos</h3><p>Pick up where you left off. Double-tap to jump 10 seconds back or forward.</p></div>
+      <div><div class="ic"><svg class="i"><use href="#moon"/></svg></div><h3>Dark theme</h3><p>A low-glare interface made for late-night listening.</p></div>
+    </div>
+  </section>
+
+  <section id="extras">
+    <div class="extra">
+      <div>
+        <h2>Optional extras, unlocked by an ad</h2>
+        <p>Playback is always free. Watch one short ad to turn on the extras for 10 days, and again whenever you want them.</p>
+      </div>
+      <div class="tags"><span>Sleep timer</span><span>Playback speed</span><span>Lyrics</span><span>Picture-in-picture</span></div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install in four steps</h2>
+    <p class="sub">Your phone asks for permission once because the app isn’t from the Play Store. That’s normal.</p>
+    <ol class="steps">
+      <li><b>Download.</b> Open this page in Chrome and tap Download APK. If a warning appears, choose Download anyway.</li>
+      <li><b>Allow installs.</b> Open the file. If your phone says “Install unknown apps”, tap Settings, allow Chrome, then go back.</li>
+      <li><b>Install.</b> Tap Install. If Play Protect warns you, choose Install anyway.</li>
+      <li><b>Open LYRA.</b> Allow access to music and videos and your library fills itself.</li>
+    </ol>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <details><summary>Why does Play Protect show a warning?</summary><p>LYRA doesn’t come from the Play Store, so Google flags it as an unknown source. The app only asks for access to your music, videos and notifications. Install it only if you’re comfortable with that.</p></details>
+    <details><summary>Does LYRA download videos or songs from the internet?</summary><p>No. LYRA is a player for files already on your phone. It has no online downloader.</p></details>
+    <details><summary>Where do the ads come from?</summary><p>Ads come from Google AdMob and only appear when you choose to unlock the extras, never in the middle of a song or video. In the EU and UK you will see Google’s consent form first.</p></details>
+    <details><summary>Are my files uploaded anywhere?</summary><p>No. Your songs, videos and playlists stay on your phone, and LYRA doesn’t ask you to sign in.</p></details>
+    <details><summary>How do I update?</summary><p>Download the newest APK from this page and install it over the old one. Your playlists and favorites stay.</p></details>
+  </section>
+
+  <section>
+    <div class="cta">
+      <h2>Get LYRA for Android</h2>
+      <a class="btn dl" href="#">Download APK</a>
+    </div>
+  </section>
+  </main>
+  <footer>LYRA · Music &amp; video player for Android · Beta</footer>
+</div>
+
+<script>
+  // ▼▼ Paste your APK download link here (for example a GitHub Releases link) ▼▼
+  var APK_URL = "https://github.com/akrrabbi9-prog/lyra-releases/releases/latest/download/lyra.apk";
+  // ▲▲ ------------------------------------------------------------------- ▲▲
+  var links = document.querySelectorAll(".dl"), note = document.getElementById("note");
+  links.forEach(function (a) {
+    if (APK_URL) { a.href = APK_URL; a.target = "_blank"; a.rel = "noopener"; }
+    else a.addEventListener("click", function (e) { e.preventDefault(); note.style.display = "block"; note.scrollIntoView({block:"center"}); });
+  });
+</script>
+</body>
+</html>
